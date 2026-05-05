@@ -1,0 +1,19 @@
+{
+  "name": "@j3r3mcdev/auth-service",
+  "version": "1.0.0",
+  "description": "Module d'authentification complet pour NestJS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@prisma/client": "^5.0.0"
+  }
+}
