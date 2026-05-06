@@ -1,3 +1,4 @@
+## [1.0.10](https://github.com/j3r3mC/auth-service-lib/compare/v1.0.9...v1.0.10) (2026-05-06)
 # Changelog
 
 Toutes les modifications notables de ce projet seront documentées dans ce fichier.
