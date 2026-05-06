@@ -1,8 +1,8 @@
-import bcrypt from 'bcrypt';
-const SALT_ROUNDS = 10;
+import bcrypt from "bcrypt";
 export async function hashPassword(password) {
-    return bcrypt.hash(password, SALT_ROUNDS);
-}
-export async function comparePassword(password, hash) {
-    return bcrypt.compare(password, hash);
+    if (typeof password !== "string" || password.trim().length === 0) {
+        throw new Error("Password cannot be empty");
+    }
+    const saltRounds = 10;
+    return bcrypt.hash(password, saltRounds);
 }

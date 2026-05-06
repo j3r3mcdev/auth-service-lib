@@ -1,2 +1,2 @@
-export declare function sanitizeUser(user: any): any;
+export declare function sanitize(input: string): string;
 //# sourceMappingURL=sanitize.d.ts.map
