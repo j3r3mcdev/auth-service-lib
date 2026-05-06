@@ -1,6 +1,6 @@
 {
   "name": "@j3r3mcdev/auth-service",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Authentication utilities for Node/NestJS (hashing, tokens, validators, sanitization).",
   "type": "module",
   "main": "./dist/index.js",
