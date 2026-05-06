@@ -1,6 +1,4 @@
-export function sanitizeUser(user: any) {
-  if (!user) return null;
-
-  const { password, refreshToken, ...safe } = user;
-  return safe;
+export function sanitize(input: string): string {
+  if (!input) return "";
+  return input.replace(/[<>]/g, "");
 }

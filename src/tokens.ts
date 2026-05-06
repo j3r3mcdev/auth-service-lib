@@ -1,19 +1,27 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import * as jwt from "jsonwebtoken";
 
 export function generateTokens(
-  payload: object,
+  payload: any,
   secret: string,
-  expiresIn: SignOptions['expiresIn'] = '15m'
+  expiresIn: string
 ) {
-  const accessToken = jwt.sign(payload, secret, { expiresIn } as SignOptions);
+  const accessToken = jwt.sign(
+    payload,
+    secret,
+    { expiresIn } as jwt.SignOptions
+  );
+
   return { accessToken };
 }
 
+export function generateToken(
+  payload: any,
+  secret: string,
+  expiresIn: string
+) {
+  return generateTokens(payload, secret, expiresIn).accessToken;
+}
 
 export function verifyToken(token: string, secret: string) {
-  try {
-    return jwt.verify(token, secret);
-  } catch {
-    return null;
-  }
+  return jwt.verify(token, secret) as any;
 }
