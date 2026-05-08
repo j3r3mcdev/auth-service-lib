@@ -1,4 +1,4 @@
-import { createAuthGuard } from "../../src/auth/guard/create-auth-guard";
+import { createAuthGuard } from "../src/auth/guard/create-auth-guard";
 
 describe("Auth Guard", () => {
   const mockReq = () => ({
