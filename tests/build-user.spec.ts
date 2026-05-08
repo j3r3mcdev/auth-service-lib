@@ -44,4 +44,9 @@ describe("defaultBuildUserObject", () => {
     expect(user.payload).toEqual(payload);
     expect(payload.meta.active).toBe(true);
   });
+
+  test("should initialize roles as empty array", () => {
+    const user = defaultBuildUserObject({ id: 1 });
+    expect(user.roles).toEqual([]);
+  });
 });
