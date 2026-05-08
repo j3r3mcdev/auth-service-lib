@@ -1,4 +1,5 @@
 import { createAuthGuard } from "../src/auth/guard/create-auth-guard";
+import { requireRole } from "../src/roles/role-checker";
 
 describe("Auth Guard", () => {
   const mockReq = () => ({
@@ -103,7 +104,38 @@ describe("Auth Guard", () => {
         }),
       },
       access: {
-        requiredRoles: ["ADMIN"],
+        roleChecks: [requireRole("ADMIN")],
+      },
+    });
+
+    const req = mockReq();
+    const res = mockRes();
+    const next = mockNext();
+
+    await guard(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  test("guard rejects when role-check fails", async () => {
+    const guard = createAuthGuard({
+      extract: {
+        extractToken: () => "token",
+      },
+      validate: {
+        validateToken: async () => ({ id: 1 }),
+      },
+      user: {
+        buildUserObject: () => ({
+          isAuthenticated: true,
+          payload: { id: 1 },
+          roles: ["user"],
+          permissions: [],
+        }),
+      },
+      access: {
+        roleChecks: [requireRole("admin")],
       },
     });
 

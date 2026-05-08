@@ -1,6 +1,6 @@
 import { defaultOptions } from "../core/default-options";
 import { deepMerge } from "../core/deep-merge";
-import { AuthGuardOptions } from "../core/types";
+import { AuthGuardOptions, Role } from "../core/types";
 
 export function createAuthGuard(customOptions: AuthGuardOptions = {}) {
   const options = deepMerge(defaultOptions, customOptions);
@@ -25,14 +25,15 @@ export function createAuthGuard(customOptions: AuthGuardOptions = {}) {
         return res.status(401).json({ error: "Unauthorized: Invalid user" });
       }
 
-      // 4. Vérification des rôles
-      const requiredRoles = options.access?.requiredRoles || [];
-      if (requiredRoles.length > 0) {
-        const hasRole = requiredRoles.every((role: string) =>
-          user.roles.includes(role),
+      // 4. Vérification des rôles via role-checkers
+      const roleChecks = options.access?.roleChecks || [];
+
+      if (roleChecks.length > 0) {
+        const ok = roleChecks.every((check: (roles: Role[]) => boolean) =>
+          check(user.roles),
         );
 
-        if (!hasRole) {
+        if (!ok) {
           return res.status(403).json({ error: "Forbidden: Missing roles" });
         }
       }
