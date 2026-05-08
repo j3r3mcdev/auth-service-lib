@@ -1,4 +1,4 @@
-import { hashPassword } from "../src/hashing";
+import { hashPassword } from "../src/utils/hashing";
 import bcrypt from "bcrypt";
 
 describe("hashPassword", () => {

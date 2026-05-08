@@ -1,4 +1,4 @@
-import { sanitize } from "../src/sanitize";
+import { sanitize } from "../src/utils/sanitize";
 
 describe("sanitize", () => {
   it("removes dangerous characters", () => {

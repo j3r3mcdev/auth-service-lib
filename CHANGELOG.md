@@ -1,30 +1,62 @@
-## [1.0.10](https://github.com/j3r3mC/auth-service-lib/compare/v1.0.9...v1.0.10) (2026-05-06)
 # Changelog
 
-Toutes les modifications notables de ce projet seront documentées dans ce fichier.
+Toutes les modifications notables de ce projet sont documentées dans ce fichier.
 
-Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
+Le format suit les recommandations de [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 et ce projet adhère au versionnage sémantique (SemVer).
 
 ---
 
-## [1.0.0] - 2026-05-06
-### Ajouté
-- Première version stable de `@j3r3mcdev/auth-service`
-- Fonctions de hachage de mot de passe (bcrypt)
-- Fonctions de génération et vérification de tokens (JWT-ready)
-- Helpers de sanitization (nettoyage d’input)
-- Validators (email, mot de passe, formats)
-- Build ESM complet compatible Node 20+
-- Déclarations TypeScript (`.d.ts`)
-- Exports propres via `package.json`
-- Structure `dist/` générée automatiquement
-- Support complet NestJS / TypeScript
+## [Unreleased]
+
+### Added
+
+- Support futur pour permissions avancées
+- Support futur pour stratégies d’extraction custom supplémentaires
 
 ---
 
-## [Unreleased]
-### À venir
-- Ajout d’un module de gestion de refresh tokens
-- Ajout d’un système de rate limiting
-- Ajout d’un helper pour les cookies sécurisés
+## [1.1.0] - 2026-05-08
+
+### Added
+
+- Ajout complet du **Auth Guard** configurable (extract, verify, build-user, access)
+- Ajout du module `extract-token` + extracteur par défaut
+- Ajout du module `build-user` + builder par défaut
+- Ajout du module `deep-merge` utilisé par le guard
+- Ajout des tests unitaires complets :
+  - hashing
+  - tokens
+  - sanitize
+  - validators
+  - auth-guard
+  - extract-token
+  - build-user
+  - deep-merge
+
+### Changed
+
+- Réorganisation complète de l’architecture interne (`src/auth/...`)
+- README entièrement réécrit et enrichi
+- Export global simplifié et stabilisé
+
+### Fixed
+
+- Correction des chemins d’import dans les tests
+- Correction de comportements edge-case dans sanitize et validators
+
+---
+
+## [1.0.0] - 2026-05-06
+
+### Added
+
+- Première version stable de `@j3r3mcdev/auth-service`
+- Hashing bcrypt (hash / compare)
+- Tokens JWT (generate / verify)
+- Validators (email, password, UUID…)
+- Sanitization (trim, escape, normalize)
+- Build ESM complet compatible Node 20+
+- Déclarations TypeScript
+- Exports propres via `package.json`
+- Structure `dist/` générée automatiquement

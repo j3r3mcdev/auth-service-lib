@@ -1,4 +1,4 @@
-import { generateToken, verifyToken } from "../src/tokens";
+import { generateToken, verifyToken } from "../src/utils/tokens";
 
 describe("tokens", () => {
   it("generates a valid token", () => {
