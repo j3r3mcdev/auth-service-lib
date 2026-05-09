@@ -1,10 +1,10 @@
 export interface MiddlewareRequest {
-  ip?: string;
-  url: string; // <-- AJOUT IMPORTANT
+  method: string; // <— AJOUT
   headers: Record<string, string | undefined>;
-
-  query?: Record<string, unknown>;
-  body?: Record<string, unknown>;
+  body?: any;
+  query?: any;
+  params?: any;
+  url?: string;
 }
 
 export interface MiddlewareResponse {
