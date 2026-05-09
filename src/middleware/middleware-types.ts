@@ -1,10 +1,13 @@
 export interface MiddlewareRequest {
-  method: string; // <— AJOUT
+  method: string;
+  url?: string;
+  originalUrl?: string;
+  path?: string;
+  ip?: string;
   headers: Record<string, string | undefined>;
   body?: any;
   query?: any;
   params?: any;
-  url?: string;
 }
 
 export interface MiddlewareResponse {
