@@ -1,23 +1,31 @@
 import { createAuthGuard } from "../src/auth/guard/create-auth-guard";
 import { requireRole } from "../src/roles/role-checker";
+import { requireAllPermissions } from "../src/auth/permission/permission-checker";
 
-describe("Auth Guard - Role Checks", () => {
-  test("allows access when user has required role", async () => {
+describe("Auth Guard - Combined requireAllPermissions", () => {
+  const baseOptions = {
+    extract: {
+      extractToken: () => "token",
+    },
+    validate: {
+      validateToken: async () => ({}),
+    },
+  };
+
+  test("allows access when user has required role AND all required permissions", async () => {
     const guard = createAuthGuard({
+      ...baseOptions,
       access: {
         roleChecks: [requireRole("ADMIN")],
-      },
-      extract: {
-        extractToken: () => "token",
-      },
-      validate: {
-        validateToken: async () => ({}),
+        permissionChecks: [
+          requireAllPermissions(["CAN_EDIT", "CAN_DELETE", "CAN_PUBLISH"]),
+        ],
       },
       user: {
         buildUserObject: () => ({
           isAuthenticated: true,
           roles: ["ADMIN"],
-          permissions: [],
+          permissions: ["CAN_EDIT", "CAN_DELETE", "CAN_PUBLISH"],
           payload: {},
         }),
       },
@@ -32,22 +40,20 @@ describe("Auth Guard - Role Checks", () => {
     expect(next).toHaveBeenCalled();
   });
 
-  test("denies access when user lacks required role", async () => {
+  test("denies access when at least one required permission is missing", async () => {
     const guard = createAuthGuard({
+      ...baseOptions,
       access: {
         roleChecks: [requireRole("ADMIN")],
-      },
-      extract: {
-        extractToken: () => "token",
-      },
-      validate: {
-        validateToken: async () => ({}),
+        permissionChecks: [
+          requireAllPermissions(["CAN_EDIT", "CAN_DELETE", "CAN_PUBLISH"]),
+        ],
       },
       user: {
         buildUserObject: () => ({
           isAuthenticated: true,
-          roles: ["USER"],
-          permissions: [],
+          roles: ["ADMIN"],
+          permissions: ["CAN_EDIT", "CAN_DELETE"], // ❌ missing CAN_PUBLISH
           payload: {},
         }),
       },

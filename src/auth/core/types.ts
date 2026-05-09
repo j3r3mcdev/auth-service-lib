@@ -23,8 +23,8 @@ export interface UserOptions {
 
 // 5. Options d'accès (rôles)
 export interface AccessOptions {
-  requiredRoles?: Role[]; // ancien système (optionnel)
-  roleChecks?: Array<(roles: Role[]) => boolean>; // nouveau système
+  roleChecks?: Array<(roles: string[]) => boolean>;
+  permissionChecks?: Array<(permissions: string[]) => boolean>;
 }
 
 // 6. Options complètes du guard
