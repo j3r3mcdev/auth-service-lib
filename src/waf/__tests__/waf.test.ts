@@ -1,0 +1,37 @@
+import { waf } from "../waf";
+
+describe("WAF pipeline", () => {
+  it("active tous les middlewares par défaut", () => {
+    const chain = waf();
+
+    // 6 middlewares : sqli, xss, path, lfi, rfi, user-agent
+    expect(chain.length).toBe(6);
+  });
+
+  it("désactive un module quand on passe une option", () => {
+    const chain = waf({ rfi: false });
+
+    // 5 middlewares car RFI est désactivé
+    expect(chain.length).toBe(5);
+  });
+
+  it("désactive plusieurs modules", () => {
+    const chain = waf({ sqli: false, xss: false });
+
+    // 4 middlewares restants
+    expect(chain.length).toBe(4);
+  });
+
+  it("désactive tout si on met tout à false", () => {
+    const chain = waf({
+      sqli: false,
+      xss: false,
+      path: false,
+      lfi: false,
+      rfi: false,
+      userAgent: false,
+    });
+
+    expect(chain.length).toBe(0);
+  });
+});
