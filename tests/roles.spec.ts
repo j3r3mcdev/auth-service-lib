@@ -1,33 +1,39 @@
 import {
-  hasRole,
-  hasAnyRole,
-  hasAllRoles,
-  addRole,
-  addRoles,
-} from "../src/roles/role-utils";
+  requireRole,
+  requireAnyRole,
+  requireAllRoles,
+} from "../src/roles/role-checker";
 
-describe("Role utils", () => {
-  test("hasRole should detect a role", () => {
-    expect(hasRole(["admin"], "admin")).toBe(true);
-    expect(hasRole(["admin"], "user")).toBe(false);
+describe("Role Checkers", () => {
+  const roles = ["admin", "editor", "user"];
+
+  test("requireRole returns true when role is present", () => {
+    const check = requireRole("admin");
+    expect(check(roles)).toBe(true);
   });
 
-  test("hasAnyRole should detect at least one role", () => {
-    expect(hasAnyRole(["admin"], ["user", "admin"])).toBe(true);
-    expect(hasAnyRole(["guest"], ["user", "admin"])).toBe(false);
+  test("requireRole returns false when role is missing", () => {
+    const check = requireRole("superadmin");
+    expect(check(roles)).toBe(false);
   });
 
-  test("hasAllRoles should require all roles", () => {
-    expect(hasAllRoles(["admin", "user"], ["admin"])).toBe(true);
-    expect(hasAllRoles(["admin"], ["admin", "user"])).toBe(false);
+  test("requireAnyRole returns true when at least one role matches", () => {
+    const check = requireAnyRole(["guest", "editor"]);
+    expect(check(roles)).toBe(true);
   });
 
-  test("addRole should add a role only once", () => {
-    expect(addRole(["admin"], "admin")).toEqual(["admin"]);
-    expect(addRole(["admin"], "user")).toEqual(["admin", "user"]);
+  test("requireAnyRole returns false when none match", () => {
+    const check = requireAnyRole(["guest", "superadmin"]);
+    expect(check(roles)).toBe(false);
   });
 
-  test("addRoles should merge roles without duplicates", () => {
-    expect(addRoles(["admin"], ["admin", "user"])).toEqual(["admin", "user"]);
+  test("requireAllRoles returns true when all roles match", () => {
+    const check = requireAllRoles(["admin", "user"]);
+    expect(check(roles)).toBe(true);
+  });
+
+  test("requireAllRoles returns false when at least one is missing", () => {
+    const check = requireAllRoles(["admin", "superadmin"]);
+    expect(check(roles)).toBe(false);
   });
 });

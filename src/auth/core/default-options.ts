@@ -5,15 +5,21 @@ import { defaultBuildUserObject } from "../user/default-build-user";
 
 export const defaultOptions: AuthGuardOptions = {
   extract: {
-    extractToken: defaultExtractTokenFromAuthorizationHeader,
+    extractToken: () => null,
   },
   validate: {
-    validateToken: defaultValidateJwtToken,
+    validateToken: async () => null,
   },
   user: {
-    buildUserObject: defaultBuildUserObject,
+    buildUserObject: () => ({
+      isAuthenticated: false,
+      roles: [],
+      permissions: [],
+      payload: null,
+    }),
   },
   access: {
-    requiredRoles: [],
+    roleChecks: [],
+    permissionChecks: [],
   },
 };
