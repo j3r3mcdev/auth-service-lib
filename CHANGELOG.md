@@ -16,6 +16,31 @@ et ce projet adhère au versionnage sémantique (SemVer).
 
 ---
 
+## [1.0.27] - 2026-05-09
+
+### Added
+
+- Ajout du système de rôles modulaire via `access.roleChecks`
+- Ajout des role-checkers :
+  - `requireRole`
+  - `requireAnyRole`
+  - `requireAllRoles`
+- Intégration complète des rôles dans le Auth Guard
+- Ajout des tests unitaires pour les rôles et le guard
+
+### Changed
+
+- Mise à jour des types (`AccessOptions`, `AuthGuardOptions`) pour supporter `roleChecks`
+- Nettoyage du guard pour remplacer progressivement `requiredRoles` par un système extensible
+
+### Deprecated
+
+- `requiredRoles` est désormais déprécié (encore supporté pour compatibilité)
+
+### Fixed
+
+- Correction des tests liés au guard après migration vers `roleChecks`
+
 ## [1.1.0] - 2026-05-08
 
 ### Added
@@ -43,7 +68,7 @@ et ce projet adhère au versionnage sémantique (SemVer).
 ### Fixed
 
 - Correction des chemins d’import dans les tests
-- Correction de comportements edge-case dans sanitize et validators
+- Correction de comportaements edge-case dans sanitize et validators
 
 ---
 
