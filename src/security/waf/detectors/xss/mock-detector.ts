@@ -1,4 +1,4 @@
-import { XssDetector } from "../xss-detector";
+import { XssDetector } from "../../../../middleware/advanced/xxs/xss-detector";
 
 export class MockXssDetector implements XssDetector {
   constructor(private map: Record<string, boolean>) {}

@@ -1,5 +1,5 @@
 import { sqliCheck } from "../sqli-check";
-import { MockSqlInjectionDetector } from "../detectors/mock-detector";
+import { MockSqlInjectionDetector } from "../../../../security/waf/detectors/sqli/mock-detector";
 
 describe("sqliCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {

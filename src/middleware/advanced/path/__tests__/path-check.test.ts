@@ -1,5 +1,5 @@
 import { pathCheck } from "../path-check";
-import { MockPathTraversalDetector } from "../detectors/mock-detector";
+import { MockPathTraversalDetector } from "../../../../security/waf/detectors/path/mock-detector";
 
 describe("pathCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {

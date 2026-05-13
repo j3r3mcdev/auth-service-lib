@@ -1,4 +1,4 @@
-import { userAgentCheck } from "./user-agent-check";
+import { basicUserAgentCheck } from "./user-agent-check";
 import { ipCheck } from "./ip-check";
 import { rateLimit } from "./rate-limit";
 import { anomalyDetection } from "./anomaly_detection";
@@ -8,7 +8,7 @@ import { pathNormalization } from "./path-normalization";
 import { methodEnforcement } from "./method-enforcement";
 
 export const preAuthPipeline = [
-  userAgentCheck,
+  basicUserAgentCheck,
   ipCheck,
   rateLimit,
   headerValidation,

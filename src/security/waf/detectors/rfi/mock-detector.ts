@@ -1,6 +1,6 @@
-import { SqlInjectionDetector } from "../sqli-detector";
+import { RfiDetector } from "../../../../middleware/advanced/rfi/rfi-detector";
 
-export class MockSqlInjectionDetector implements SqlInjectionDetector {
+export class MockRfiDetector implements RfiDetector {
   constructor(private map: Record<string, boolean>) {}
 
   detect(input: string): boolean {

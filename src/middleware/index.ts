@@ -1,1 +1,12 @@
+// Pré-auth
+export { basicUserAgentCheck } from "./pre-auth/user-agent-check";
+export { ipCheck } from "./pre-auth/ip-check";
+export { rateLimit } from "./pre-auth/rate-limit";
+export { anomalyDetection } from "./pre-auth/anomaly_detection";
+export { headerValidation } from "./pre-auth/header-validation";
+export { contentTypeCheck } from "./pre-auth/content-type-check";
+export { pathNormalization } from "./pre-auth/path-normalization";
+export { methodEnforcement } from "./pre-auth/method-enforcement";
+
+// Advanced WAF
 export * from "./advanced";

@@ -1,10 +1,10 @@
-import { userAgentCheck } from "../user-agent-check";
-import { MockUserAgentDetector } from "../detectors/mock-detector";
+import { userAgentFilteringCheck } from "../user-agent-filtering-check";
+import { MockUserAgentDetector } from "../../../../security/waf/detectors/user-agent/mock-detector";
 
 describe("userAgentCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {
     const detector = new MockUserAgentDetector({ "curl/8.0": true });
-    const middleware = userAgentCheck(detector);
+    const middleware = userAgentFilteringCheck(detector);
 
     const req: any = {
       headers: { "user-agent": "curl/8.0" },
@@ -26,7 +26,7 @@ describe("userAgentCheck middleware", () => {
 
   it("laisse passer quand le détecteur renvoie false", () => {
     const detector = new MockUserAgentDetector({ "Mozilla/5.0": false });
-    const middleware = userAgentCheck(detector);
+    const middleware = userAgentFilteringCheck(detector);
 
     const req: any = {
       headers: { "user-agent": "Mozilla/5.0" },

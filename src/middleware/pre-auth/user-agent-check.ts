@@ -4,7 +4,7 @@ import {
   MiddlewareNext,
 } from "../middleware-types";
 
-export function userAgentCheck(
+export function basicUserAgentCheck(
   req: MiddlewareRequest,
   res: MiddlewareResponse,
   next: MiddlewareNext,

@@ -1,6 +1,6 @@
-import { RfiDetector } from "../rfi-detector";
+import { LfiDetector } from "../../../../middleware/advanced/lfi/lfi-detector";
 
-export class MockRfiDetector implements RfiDetector {
+export class MockLfiDetector implements LfiDetector {
   constructor(private map: Record<string, boolean>) {}
 
   detect(input: string): boolean {

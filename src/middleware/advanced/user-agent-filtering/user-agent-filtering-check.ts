@@ -5,7 +5,7 @@ import {
 } from "../../middleware-types";
 import { UserAgentDetector } from "./user-agent-detector";
 
-export function userAgentCheck(detector: UserAgentDetector) {
+export function userAgentFilteringCheck(detector: UserAgentDetector) {
   return function (
     req: MiddlewareRequest,
     res: MiddlewareResponse,
