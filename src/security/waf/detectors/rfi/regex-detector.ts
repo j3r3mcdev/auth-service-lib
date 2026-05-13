@@ -1,4 +1,4 @@
-import { RfiDetector } from "../rfi-detector";
+import { RfiDetector } from "../../../../middleware/advanced/rfi/rfi-detector";
 
 export class RegexRfiDetector implements RfiDetector {
   private patterns: RegExp[] = [

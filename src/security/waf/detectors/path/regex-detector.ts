@@ -1,4 +1,4 @@
-import { PathTraversalDetector } from "../path-detector";
+import { PathTraversalDetector } from "../../../../middleware/advanced/path/path-detector";
 
 export class RegexPathTraversalDetector implements PathTraversalDetector {
   private patterns: RegExp[] = [

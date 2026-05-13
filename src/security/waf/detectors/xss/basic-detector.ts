@@ -1,4 +1,4 @@
-import { XssDetector } from "../xss-detector";
+import { XssDetector } from "../../../../middleware/advanced/xxs/xss-detector";
 
 export class BasicXssDetector implements XssDetector {
   private patterns: string[] = [

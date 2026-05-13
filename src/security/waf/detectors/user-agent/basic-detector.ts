@@ -1,4 +1,4 @@
-import { UserAgentDetector } from "../user-agent-detector";
+import { UserAgentDetector } from "../../../../middleware/advanced/user-agent-filtering/user-agent-detector";
 
 export class BasicUserAgentDetector implements UserAgentDetector {
   private blacklist: string[] = [

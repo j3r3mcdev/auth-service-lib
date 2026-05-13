@@ -1,4 +1,4 @@
-import { SqlInjectionDetector } from "../sqli-detector";
+import { SqlInjectionDetector } from "../../../../middleware/advanced/sqli/sqli-detector";
 
 export class BasicSqlInjectionDetector implements SqlInjectionDetector {
   private patterns: string[] = [

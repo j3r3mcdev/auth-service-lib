@@ -1,4 +1,4 @@
-import { LfiDetector } from "../lfi-detector";
+import { LfiDetector } from "../../../../middleware/advanced/lfi/lfi-detector";
 
 export class RegexLfiDetector implements LfiDetector {
   private patterns: RegExp[] = [
