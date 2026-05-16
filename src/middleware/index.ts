@@ -7,6 +7,3 @@ export { headerValidation } from "./pre-auth/header-validation";
 export { contentTypeCheck } from "./pre-auth/content-type-check";
 export { pathNormalization } from "./pre-auth/path-normalization";
 export { methodEnforcement } from "./pre-auth/method-enforcement";
-
-// Advanced WAF
-export * from "./advanced";
