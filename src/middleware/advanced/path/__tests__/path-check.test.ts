@@ -1,9 +1,9 @@
 import { pathCheck } from "../path-check";
-import { MockPathTraversalDetector } from "../../../../security/waf/detectors/path/mock-detector";
+import { MockPathDetector } from "../mock-path-detector";
 
 describe("pathCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {
-    const detector = new MockPathTraversalDetector({ "../etc/passwd": true });
+    const detector = new MockPathDetector({ "../etc/passwd": true });
     const middleware = pathCheck(detector);
 
     const req: any = {
@@ -27,7 +27,7 @@ describe("pathCheck middleware", () => {
   });
 
   it("laisse passer quand le détecteur renvoie false", () => {
-    const detector = new MockPathTraversalDetector({
+    const detector = new MockPathDetector({
       "images/photo.png": false,
     });
     const middleware = pathCheck(detector);

@@ -1,5 +1,5 @@
 import { rfiCheck } from "../rfi-check";
-import { MockRfiDetector } from "../../../../security/waf/detectors/rfi/mock-detector";
+import { MockRfiDetector } from "../mock-rfi-detector";
 
 describe("rfiCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {

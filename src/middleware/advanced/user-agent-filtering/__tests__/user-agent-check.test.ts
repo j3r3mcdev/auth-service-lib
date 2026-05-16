@@ -1,5 +1,5 @@
 import { userAgentFilteringCheck } from "../user-agent-filtering-check";
-import { MockUserAgentDetector } from "../../../../security/waf/detectors/user-agent/mock-detector";
+import { MockUserAgentDetector } from "../mock-user-agent-detector";
 
 describe("userAgentCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {
