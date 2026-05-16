@@ -1,5 +1,5 @@
 import { xssCheck } from "../xss-check";
-import { MockXssDetector } from "../../../../security/waf/detectors/xss/mock-detector";
+import { MockXssDetector } from "../mock-xss-detector";
 
 describe("xssCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {

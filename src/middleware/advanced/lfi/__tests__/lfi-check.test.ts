@@ -1,5 +1,5 @@
 import { lfiCheck } from "../lfi-check";
-import { MockLfiDetector } from "../../../../security/waf/detectors/lfi/mock-detector";
+import { MockLfiDetector } from "../mock-lfi-detector";
 
 describe("lfiCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {
