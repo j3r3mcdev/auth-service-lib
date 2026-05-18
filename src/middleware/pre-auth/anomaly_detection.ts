@@ -31,7 +31,10 @@ export function anomalyDetection(
   };
 
   // 1. User-Agent variety
-  const ua = req.headers["user-agent"] || "unknown";
+  const ua = Array.isArray(req.headers["user-agent"])
+    ? req.headers["user-agent"][0]
+    : (req.headers["user-agent"] ?? "");
+
   state.userAgents.add(ua);
 
   if (state.userAgents.size > MAX_USER_AGENT_VARIETY) {

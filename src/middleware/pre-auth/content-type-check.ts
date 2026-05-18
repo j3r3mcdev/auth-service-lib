@@ -16,7 +16,12 @@ export function contentTypeCheck(
   next: MiddlewareNext,
 ) {
   const method = req.method?.toUpperCase() || "GET";
-  const contentType = req.headers["content-type"];
+
+  // Normalisation du header Content-Type
+  const rawContentType = req.headers["content-type"];
+  const contentType = Array.isArray(rawContentType)
+    ? rawContentType[0]
+    : (rawContentType ?? "");
 
   const needsBody = ["POST", "PUT", "PATCH"].includes(method);
 
