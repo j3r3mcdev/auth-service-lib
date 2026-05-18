@@ -13,7 +13,7 @@ import { BasicLfiDetector } from "../middleware/advanced/lfi/detectors/basic-lfi
 import { rfiCheck } from "../middleware/advanced/rfi/rfi-check";
 import { BasicRfiDetector } from "../middleware/advanced/rfi/detectors/basic-rfi-detector";
 
-import { userAgentFilteringCheck } from "../middleware/advanced/user-agent-filtering/user-agent-filtering-check";
+import { userAgentCheck } from "../middleware/advanced/user-agent-filtering/user-agent-filtering-check";
 import { BasicUserAgentDetector } from "../middleware/advanced/user-agent-filtering/detectors/basic-user-agent-detector";
 
 import { geoIpCheck } from "../middleware/advanced/geoip/geoip-check";
@@ -55,7 +55,7 @@ export function waf(options: WafOptions = {}) {
   if (enabled.lfi) chain.push(lfiCheck(new BasicLfiDetector()));
   if (enabled.rfi) chain.push(rfiCheck(new BasicRfiDetector()));
   if (enabled.userAgent)
-    chain.push(userAgentFilteringCheck(new BasicUserAgentDetector()));
+    chain.push(userAgentCheck(new BasicUserAgentDetector()));
 
   if (enabled.geoip) {
     const provider = options.geoIpProvider ?? new MockGeoIpProvider();

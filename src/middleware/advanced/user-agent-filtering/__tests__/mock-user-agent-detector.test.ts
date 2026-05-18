@@ -6,7 +6,7 @@ describe("MockUserAgentDetector", () => {
       "curl/7.88.1": true,
     });
 
-    expect(detector.detect("curl/7.88.1")).toBe(true);
+    expect(detector.isMalicious("curl/7.88.1")).toBe(true);
   });
 
   it("retourne false pour un user-agent mocké comme safe", () => {
@@ -14,18 +14,18 @@ describe("MockUserAgentDetector", () => {
       "Mozilla/5.0": false,
     });
 
-    expect(detector.detect("Mozilla/5.0")).toBe(false);
+    expect(detector.isMalicious("Mozilla/5.0")).toBe(false);
   });
 
   it("retourne false si le user-agent n'est pas dans la map", () => {
     const detector = new MockUserAgentDetector({});
 
-    expect(detector.detect("Chrome/123.0")).toBe(false);
+    expect(detector.isMalicious("Chrome/123.0")).toBe(false);
   });
 
   it("retourne false si user-agent est undefined", () => {
     const detector = new MockUserAgentDetector({});
 
-    expect(detector.detect(undefined)).toBe(false);
+    expect(detector.isMalicious(undefined as any)).toBe(false);
   });
 });

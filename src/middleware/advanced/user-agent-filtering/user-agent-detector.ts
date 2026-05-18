@@ -1,3 +1,3 @@
 export interface UserAgentDetector {
-  detect(userAgent: string | undefined): boolean;
+  isMalicious(ua: string): boolean;
 }

@@ -1,26 +1,31 @@
-import { BasicUserAgentDetector } from "../detectors/basic-user-agent-detector";
+import { MockUserAgentDetector } from "../detectors/mock-user-agent-detector";
 
-describe("BasicUserAgentDetector", () => {
-  it("bloque les user-agents connus comme dangereux", () => {
-    const detector = new BasicUserAgentDetector();
+describe("MockUserAgentDetector", () => {
+  it("retourne true pour un user-agent mocké comme dangereux", () => {
+    const detector = new MockUserAgentDetector({
+      "curl/7.88.1": true,
+    });
 
-    expect(detector.detect("curl/7.88.1")).toBe(true);
-    expect(detector.detect("Wget/1.21")).toBe(true);
-    expect(detector.detect("python-requests/2.31")).toBe(true);
-    expect(detector.detect("Googlebot")).toBe(true);
+    expect(detector.isMalicious("curl/7.88.1")).toBe(true);
   });
 
-  it("autorise les user-agents normaux", () => {
-    const detector = new BasicUserAgentDetector();
+  it("retourne false pour un user-agent mocké comme safe", () => {
+    const detector = new MockUserAgentDetector({
+      "Mozilla/5.0": false,
+    });
 
-    expect(detector.detect("Mozilla/5.0")).toBe(false);
-    expect(detector.detect("Chrome/123.0")).toBe(false);
-    expect(detector.detect("Safari/17.0")).toBe(false);
+    expect(detector.isMalicious("Mozilla/5.0")).toBe(false);
+  });
+
+  it("retourne false si le user-agent n'est pas dans la map", () => {
+    const detector = new MockUserAgentDetector({});
+
+    expect(detector.isMalicious("Chrome/123.0")).toBe(false);
   });
 
   it("retourne false si user-agent est undefined", () => {
-    const detector = new BasicUserAgentDetector();
+    const detector = new MockUserAgentDetector({});
 
-    expect(detector.detect(undefined)).toBe(false);
+    expect(detector.isMalicious(undefined as any)).toBe(false);
   });
 });

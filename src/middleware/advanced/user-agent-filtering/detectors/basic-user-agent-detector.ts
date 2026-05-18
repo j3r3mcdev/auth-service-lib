@@ -1,11 +1,15 @@
 import { UserAgentDetector } from "../user-agent-detector";
 
-const BLOCKED = ["curl", "wget", "python", "bot", "crawler"];
-
 export class BasicUserAgentDetector implements UserAgentDetector {
-  detect(ua: string | undefined): boolean {
+  private blacklist: string[];
+
+  constructor(blacklist: string[] = ["curl", "wget", "python-requests"]) {
+    this.blacklist = blacklist.map((s) => s.toLowerCase());
+  }
+
+  isMalicious(ua: string): boolean {
     if (!ua) return false;
     const lower = ua.toLowerCase();
-    return BLOCKED.some((p) => lower.includes(p));
+    return this.blacklist.some((blocked) => lower.includes(blocked));
   }
 }
