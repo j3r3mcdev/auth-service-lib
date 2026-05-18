@@ -1,22 +1,16 @@
-import {
-  MiddlewareRequest,
-  MiddlewareResponse,
-  MiddlewareNext,
-} from "../../middleware-types";
+import { MiddlewareFunction } from "../../middleware-types";
 import { UserAgentDetector } from "./user-agent-detector";
 
-export function userAgentFilteringCheck(detector: UserAgentDetector) {
-  return function (
-    req: MiddlewareRequest,
-    res: MiddlewareResponse,
-    next: MiddlewareNext,
-  ) {
-    const ua = req.headers?.["user-agent"];
+export function userAgentFilteringCheck(
+  detector: UserAgentDetector,
+): MiddlewareFunction {
+  return (req, res, next) => {
+    const rawUa = req.headers["user-agent"];
+    const ua = Array.isArray(rawUa) ? rawUa[0] : rawUa;
 
-    if (typeof ua === "string" && detector.detect(ua)) {
+    if (detector.detect(ua)) {
       return res.status(403).json({
-        error: "Blocked User-Agent",
-        userAgent: ua,
+        error: "Forbidden: Suspicious User-Agent detected",
       });
     }
 

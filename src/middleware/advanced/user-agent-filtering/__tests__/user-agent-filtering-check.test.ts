@@ -1,13 +1,16 @@
 import { userAgentFilteringCheck } from "../user-agent-filtering-check";
-import { MockUserAgentDetector } from "../mock-user-agent-detector";
+import { MockUserAgentDetector } from "../detectors/mock-user-agent-detector";
 
-describe("userAgentCheck middleware", () => {
+describe("userAgentFilteringCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {
-    const detector = new MockUserAgentDetector({ "curl/8.0": true });
+    const detector = new MockUserAgentDetector({
+      "curl/7.88.1": true,
+    });
+
     const middleware = userAgentFilteringCheck(detector);
 
     const req: any = {
-      headers: { "user-agent": "curl/8.0" },
+      headers: { "user-agent": "curl/7.88.1" },
     };
 
     const res: any = {
@@ -20,12 +23,17 @@ describe("userAgentCheck middleware", () => {
     middleware(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Forbidden: Suspicious User-Agent detected",
+    });
     expect(next).not.toHaveBeenCalled();
   });
 
   it("laisse passer quand le détecteur renvoie false", () => {
-    const detector = new MockUserAgentDetector({ "Mozilla/5.0": false });
+    const detector = new MockUserAgentDetector({
+      "Mozilla/5.0": false,
+    });
+
     const middleware = userAgentFilteringCheck(detector);
 
     const req: any = {
@@ -42,5 +50,7 @@ describe("userAgentCheck middleware", () => {
     middleware(req, res, next);
 
     expect(next).toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
   });
 });

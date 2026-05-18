@@ -7,7 +7,9 @@ import { BasicXssDetector } from "../middleware/advanced/xxs/detectors/basic-xss
 import { pathCheck } from "../middleware/advanced/path/path-check";
 import { lfiCheck } from "../middleware/advanced/lfi/lfi-check";
 import { rfiCheck } from "../middleware/advanced/rfi/rfi-check";
+
 import { userAgentFilteringCheck } from "../middleware/advanced/user-agent-filtering/user-agent-filtering-check";
+import { BasicUserAgentDetector } from "../middleware/advanced/user-agent-filtering/detectors/basic-user-agent-detector";
 
 export interface WafOptions {
   sqli?: boolean;
@@ -32,23 +34,18 @@ export function waf(options: WafOptions = {}) {
 
   const chain = [];
 
-  // SQL Injection (complet)
   if (enabled.sqli) chain.push(sqliCheck(new BasicSqlInjectionDetector()));
 
-  // XSS (complet)
   if (enabled.xss) chain.push(xssCheck(new BasicXssDetector()));
 
-  // Path Traversal (middleware seulement)
   if (enabled.path) chain.push(pathCheck);
 
-  // LFI (middleware seulement)
   if (enabled.lfi) chain.push(lfiCheck);
 
-  // RFI (middleware seulement)
   if (enabled.rfi) chain.push(rfiCheck);
 
-  // User-Agent Filtering (middleware seulement)
-  if (enabled.userAgent) chain.push(userAgentFilteringCheck);
+  if (enabled.userAgent)
+    chain.push(userAgentFilteringCheck(new BasicUserAgentDetector()));
 
   return chain;
 }
