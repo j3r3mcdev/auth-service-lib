@@ -1,16 +1,15 @@
 import { pathCheck } from "../path-check";
-import { MockPathDetector } from "../mock-path-detector";
+import { MockPathTraversalDetector } from "../detectors/mock-path-detector";
 
 describe("pathCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {
-    const detector = new MockPathDetector({ "../etc/passwd": true });
+    const detector = new MockPathTraversalDetector({
+      "../etc/passwd": true,
+    });
+
     const middleware = pathCheck(detector);
 
-    const req: any = {
-      query: { file: "../etc/passwd" },
-      body: {},
-      params: {},
-    };
+    const req: any = { url: "../etc/passwd" };
 
     const res: any = {
       status: jest.fn().mockReturnThis(),
@@ -22,21 +21,20 @@ describe("pathCheck middleware", () => {
     middleware(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Forbidden: Path Traversal detected",
+    });
     expect(next).not.toHaveBeenCalled();
   });
 
   it("laisse passer quand le détecteur renvoie false", () => {
-    const detector = new MockPathDetector({
-      "images/photo.png": false,
+    const detector = new MockPathTraversalDetector({
+      "/safe/path": false,
     });
+
     const middleware = pathCheck(detector);
 
-    const req: any = {
-      query: { file: "images/photo.png" },
-      body: {},
-      params: {},
-    };
+    const req: any = { url: "/safe/path" };
 
     const res: any = {
       status: jest.fn().mockReturnThis(),
@@ -48,5 +46,7 @@ describe("pathCheck middleware", () => {
     middleware(req, res, next);
 
     expect(next).toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
   });
 });
