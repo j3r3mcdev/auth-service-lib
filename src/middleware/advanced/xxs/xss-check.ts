@@ -13,7 +13,7 @@ export function xssCheck(detector: XssDetector) {
   ) {
     const inputs: string[] = [];
 
-    // Query params
+    // Query
     if (req.query) {
       for (const value of Object.values(req.query)) {
         if (typeof value === "string") inputs.push(value);
@@ -27,10 +27,17 @@ export function xssCheck(detector: XssDetector) {
       }
     }
 
+    // Params
+    if (req.params) {
+      for (const value of Object.values(req.params)) {
+        if (typeof value === "string") inputs.push(value);
+      }
+    }
+
     // Headers sensibles
     const sensitiveHeaders = ["user-agent", "referer", "x-forwarded-for"];
     for (const header of sensitiveHeaders) {
-      const value = req.headers[header];
+      const value = req.headers?.[header];
       if (typeof value === "string") inputs.push(value);
     }
 

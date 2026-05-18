@@ -4,7 +4,10 @@ export interface MiddlewareRequest {
   originalUrl?: string;
   path?: string;
   ip?: string;
-  headers: Record<string, string | undefined>;
+
+  // Correction ici :
+  headers: Record<string, string | string[] | undefined>;
+
   body?: any;
   query?: any;
   params?: any;
