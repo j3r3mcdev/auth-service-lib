@@ -5,8 +5,11 @@ import { xssCheck } from "../middleware/advanced/xxs/xss-check";
 import { BasicXssDetector } from "../middleware/advanced/xxs/detectors/basic-xss-detector";
 
 import { pathCheck } from "../middleware/advanced/path/path-check";
+
 import { lfiCheck } from "../middleware/advanced/lfi/lfi-check";
+
 import { rfiCheck } from "../middleware/advanced/rfi/rfi-check";
+import { BasicRfiDetector } from "../middleware/advanced/rfi/detectors/basic-rfi-detector";
 
 import { userAgentFilteringCheck } from "../middleware/advanced/user-agent-filtering/user-agent-filtering-check";
 import { BasicUserAgentDetector } from "../middleware/advanced/user-agent-filtering/detectors/basic-user-agent-detector";
@@ -40,9 +43,7 @@ export function waf(options: WafOptions = {}) {
 
   if (enabled.path) chain.push(pathCheck);
 
-  if (enabled.lfi) chain.push(lfiCheck);
-
-  if (enabled.rfi) chain.push(rfiCheck);
+  if (enabled.rfi) chain.push(rfiCheck(new BasicRfiDetector()));
 
   if (enabled.userAgent)
     chain.push(userAgentFilteringCheck(new BasicUserAgentDetector()));
