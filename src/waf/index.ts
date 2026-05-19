@@ -3,7 +3,6 @@ import {
   methodEnforcement,
   contentTypeCheck,
   headerValidation,
-  basicUserAgentCheck,
   ipCheck,
   rateLimit,
   anomalyDetection,
@@ -11,6 +10,7 @@ import {
 
 import {
   geoIpCheck,
+  userAgentCheck,
   sqliCheck,
   xssCheck,
   lfiCheck,
@@ -27,10 +27,13 @@ import {
   PathTraversalDetector,
 } from "../middleware/advanced";
 
+import { UserAgentDetector } from "../middleware/advanced/user-agent-filtering/user-agent-detector";
+
 export interface WafConfig {
   geoIpProvider: GeoIpProvider;
   blockedCountries?: string[];
 
+  userAgentDetector: UserAgentDetector;
   sqliDetector: SqlInjectionDetector;
   xssDetector: XssDetector;
   lfiDetector: LfiDetector;
@@ -44,13 +47,13 @@ export const createWafPipeline = (config: WafConfig) => [
   methodEnforcement,
   contentTypeCheck,
   headerValidation,
-  basicUserAgentCheck,
   ipCheck,
   rateLimit,
   anomalyDetection,
 
   // 2. ADVANCED (factories)
   geoIpCheck(config.geoIpProvider, config.blockedCountries ?? []),
+  userAgentCheck(config.userAgentDetector),
   sqliCheck(config.sqliDetector),
   xssCheck(config.xssDetector),
   lfiCheck(config.lfiDetector),

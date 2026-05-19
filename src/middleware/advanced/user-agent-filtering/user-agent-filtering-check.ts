@@ -5,18 +5,24 @@ import {
 } from "../../middleware-types";
 import { UserAgentDetector } from "./user-agent-detector";
 
-export function userAgentFilteringCheck(detector: UserAgentDetector) {
-  return function (
+export function userAgentCheck(detector: UserAgentDetector) {
+  return (
     req: MiddlewareRequest,
     res: MiddlewareResponse,
     next: MiddlewareNext,
-  ) {
-    const ua = req.headers?.["user-agent"];
+  ) => {
+    const rawUA = req.headers["user-agent"];
+    const userAgent = Array.isArray(rawUA) ? rawUA[0] : (rawUA ?? "");
 
-    if (typeof ua === "string" && detector.detect(ua)) {
+    if (!userAgent || userAgent.trim() === "") {
+      return res.status(400).json({
+        error: "Missing User-Agent header",
+      });
+    }
+
+    if (detector.isMalicious(userAgent)) {
       return res.status(403).json({
-        error: "Blocked User-Agent",
-        userAgent: ua,
+        error: "Forbidden User-Agent",
       });
     }
 

@@ -1,5 +1,7 @@
 // Pré-auth
-export { basicUserAgentCheck } from "./pre-auth/user-agent-check";
+export * from "./advanced";
+// export * from "./pre-auth"; // désactivé volontairement
+
 export { ipCheck } from "./pre-auth/ip-check";
 export { rateLimit } from "./pre-auth/rate-limit";
 export { anomalyDetection } from "./pre-auth/anomaly_detection";

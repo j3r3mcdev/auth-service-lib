@@ -36,8 +36,7 @@ export function pathCheck(detector: PathTraversalDetector) {
     for (const input of inputs) {
       if (detector.detect(input)) {
         return res.status(403).json({
-          error: "Path Traversal detected",
-          input,
+          error: "Forbidden: Path Traversal detected",
         });
       }
     }

@@ -1,45 +1,22 @@
+import { LfiDetector } from "./lfi-detector";
 import {
   MiddlewareRequest,
   MiddlewareResponse,
   MiddlewareNext,
 } from "../../middleware-types";
-import { LfiDetector } from "./lfi-detector";
 
 export function lfiCheck(detector: LfiDetector) {
-  return function (
+  return (
     req: MiddlewareRequest,
     res: MiddlewareResponse,
     next: MiddlewareNext,
-  ) {
-    const inputs: string[] = [];
+  ) => {
+    const value = req.url || req.originalUrl || "";
 
-    // URL
-    if (req.url) {
-      inputs.push(req.url);
-    }
-
-    // Query params
-    if (req.query) {
-      for (const value of Object.values(req.query)) {
-        if (typeof value === "string") inputs.push(value);
-      }
-    }
-
-    // Body
-    if (req.body) {
-      for (const value of Object.values(req.body)) {
-        if (typeof value === "string") inputs.push(value);
-      }
-    }
-
-    // Détection
-    for (const input of inputs) {
-      if (detector.detect(input)) {
-        return res.status(403).json({
-          error: "LFI detected",
-          input,
-        });
-      }
+    if (detector.detect(value)) {
+      return res.status(403).json({
+        error: "Forbidden: Local File Inclusion detected",
+      });
     }
 
     next();

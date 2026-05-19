@@ -1,5 +1,5 @@
 import { xssCheck } from "../xss-check";
-import { MockXssDetector } from "../mock-xss-detector";
+import { MockXssDetector } from "../detectors/mock-xss-detector";
 
 describe("xssCheck middleware", () => {
   it("bloque quand le détecteur renvoie true", () => {
@@ -7,10 +7,11 @@ describe("xssCheck middleware", () => {
     const middleware = xssCheck(detector);
 
     const req: any = {
+      method: "GET",
       query: { q: "<script>alert(1)</script>" },
       body: {},
       params: {},
-      headers: {},
+      headers: { "user-agent": "test" },
     };
 
     const res: any = {
@@ -32,10 +33,11 @@ describe("xssCheck middleware", () => {
     const middleware = xssCheck(detector);
 
     const req: any = {
+      method: "GET",
       query: { q: "hello" },
       body: {},
       params: {},
-      headers: {},
+      headers: { "user-agent": "test" },
     };
 
     const res: any = {
