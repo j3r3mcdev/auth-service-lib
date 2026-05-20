@@ -1,7 +1,4 @@
-// Pré-auth
-export * from "./advanced";
-// export * from "./pre-auth"; // désactivé volontairement
-
+// Pré-auth — uniquement les middlewares directs
 export { ipCheck } from "./pre-auth/ip-check";
 export { rateLimit } from "./pre-auth/rate-limit";
 export { anomalyDetection } from "./pre-auth/anomaly_detection";
