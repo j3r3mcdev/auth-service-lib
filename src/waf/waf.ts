@@ -20,6 +20,9 @@ import { geoIpCheck } from "../middleware/advanced/geoip/geoip-check";
 import { MockGeoIpProvider } from "../middleware/advanced/geoip/provider/mock-provider";
 import { GeoIpProvider } from "../middleware/advanced/geoip/geoip-provider";
 
+import { botCheck } from "../middleware/advanced/bot/bot-check";
+import { MockBotDetector } from "../middleware/advanced/bot/detectors/mock-bot-detector";
+
 export interface WafOptions {
   sqli?: boolean;
   xss?: boolean;
@@ -27,6 +30,7 @@ export interface WafOptions {
   lfi?: boolean;
   rfi?: boolean;
   userAgent?: boolean;
+  bot?: boolean;
 
   geoip?: boolean;
   blockedCountries?: string[];
@@ -40,6 +44,7 @@ const defaultWafOptions = {
   lfi: true,
   rfi: true,
   userAgent: true,
+  bot: true, // BOT activé par défaut
   geoip: false,
   blockedCountries: [],
 };
@@ -56,6 +61,11 @@ export function waf(options: WafOptions = {}) {
   if (enabled.rfi) chain.push(rfiCheck(new BasicRfiDetector()));
   if (enabled.userAgent)
     chain.push(userAgentCheck(new BasicUserAgentDetector()));
+
+  // Nouveau 7ᵉ middleware
+  if (enabled.bot) {
+    chain.push(botCheck(new MockBotDetector(false)));
+  }
 
   if (enabled.geoip) {
     const provider = options.geoIpProvider ?? new MockGeoIpProvider();

@@ -7,6 +7,12 @@ export * from "./asn/asn-check";
 export * from "./geoip/geoip-check";
 export * from "./user-agent-filtering/user-agent-filtering-check";
 
+// BOT
+export * from "./bot/bot-check";
+export * from "./bot/bot-detector";
+export * from "./bot/detectors/basic-bot-detector";
+export * from "./bot/detectors/mock-bot-detector";
+
 // Export des detectors/providers
 export * from "./geoip/geoip-provider";
 export * from "./sqli/sqli-detector";
