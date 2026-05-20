@@ -1,8 +1,11 @@
 import { sqliCheck } from "../middleware/advanced/sqli/sqli-check";
 import { BasicSqlInjectionDetector } from "../middleware/advanced/sqli/detectors/basic-sqli-detector";
 
+import { HeuristicXssProvider } from "../middleware/advanced/xxs/providers/heuristic-xss-provider";
+import { XssDetector } from "../middleware/advanced/xxs/xss-detector";
+import { AdvancedXssDetector } from "../middleware/advanced/xxs/detectors/advanced-xss-detector";
 import { xssCheck } from "../middleware/advanced/xxs/xss-check";
-import { BasicXssDetector } from "../middleware/advanced/xxs/detectors/basic-xss-detector";
+import { MlXssProvider } from "../middleware/advanced/xxs/providers/ml-xss-provider";
 
 import { pathCheck } from "../middleware/advanced/path/path-check";
 import { BasicPathTraversalDetector } from "../middleware/advanced/path/detectors/basic-path-detector";
@@ -35,6 +38,9 @@ export interface WafOptions {
   geoip?: boolean;
   blockedCountries?: string[];
   geoIpProvider?: GeoIpProvider;
+
+  // ➜ AJOUT
+  xssDetector?: XssDetector;
 }
 
 const defaultWafOptions = {
@@ -49,20 +55,29 @@ const defaultWafOptions = {
   blockedCountries: [],
 };
 
+const defaultXssProvider = new MlXssProvider(50, (input) => {
+  return input.includes("<script>") ? 90 : 10;
+});
+
+const defaultXssDetector = new AdvancedXssDetector(defaultXssProvider);
+
 export function waf(options: WafOptions = {}) {
   const enabled = { ...defaultWafOptions, ...options };
 
   const chain = [];
 
   if (enabled.sqli) chain.push(sqliCheck(new BasicSqlInjectionDetector()));
-  if (enabled.xss) chain.push(xssCheck(new BasicXssDetector()));
+
+  // XSS avancé
+  const detector = options.xssDetector ?? defaultXssDetector;
+  if (enabled.xss) chain.push(xssCheck(detector));
+
   if (enabled.path) chain.push(pathCheck(new BasicPathTraversalDetector()));
   if (enabled.lfi) chain.push(lfiCheck(new BasicLfiDetector()));
   if (enabled.rfi) chain.push(rfiCheck(new BasicRfiDetector()));
   if (enabled.userAgent)
     chain.push(userAgentCheck(new BasicUserAgentDetector()));
 
-  // Nouveau 7ᵉ middleware
   if (enabled.bot) {
     chain.push(botCheck(new MockBotDetector(false)));
   }
