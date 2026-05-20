@@ -32,6 +32,7 @@ export function sqliCheck(detector: SqlInjectionDetector) {
     if (req.headers) {
       values.push(...Object.values(req.headers).map(String));
     }
+    console.log("SQLI VALUES =", values);
 
     // Détection
     for (const value of values) {
