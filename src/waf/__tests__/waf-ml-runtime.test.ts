@@ -2,9 +2,7 @@ import { waf } from "../waf";
 
 describe("WAF FULL RUNTIME (tous les middlewares actifs)", () => {
   it("laisse passer une requête totalement clean", async () => {
-    const chain = waf({
-      // tout est activé par défaut
-    });
+    const chain = waf(); // tout activé par défaut sauf bot + geoip
 
     const req: any = {
       body: { message: "hello world" },
@@ -24,8 +22,11 @@ describe("WAF FULL RUNTIME (tous les middlewares actifs)", () => {
 
     const next = jest.fn();
 
+    // Exécution séquentielle du pipeline
     for (const mw of chain) {
       await mw(req, res, next);
+
+      // Si un middleware bloque, on arrête
       if (res.status.mock.calls.length > 0) break;
     }
 

@@ -4,8 +4,8 @@ describe("WAF pipeline", () => {
   it("active tous les middlewares par défaut", () => {
     const chain = waf();
 
-    // 7 middlewares : sqli, xss, path, lfi, rfi, user-agent, bot
-    expect(chain.length).toBe(7);
+    // 6 middlewares : sqli, xss, path, lfi, rfi, user-agent
+    expect(chain.length).toBe(6);
   });
 
   it("désactive un module quand on passe une option", () => {
@@ -13,8 +13,8 @@ describe("WAF pipeline", () => {
       rfi: false,
     });
 
-    // 6 middlewares car RFI est désactivé
-    expect(chain.length).toBe(6);
+    // 5 middlewares car RFI est désactivé
+    expect(chain.length).toBe(5);
   });
 
   it("désactive plusieurs modules", () => {
@@ -23,8 +23,8 @@ describe("WAF pipeline", () => {
       lfi: false,
     });
 
-    // 5 middlewares restants
-    expect(chain.length).toBe(5);
+    // 4 middlewares restants
+    expect(chain.length).toBe(4);
   });
 
   it("désactive tout si on met tout à false", () => {
@@ -36,6 +36,7 @@ describe("WAF pipeline", () => {
       rfi: false,
       userAgent: false,
       bot: false,
+      geoip: false,
     });
 
     expect(chain.length).toBe(0);
