@@ -1,5 +1,6 @@
-import { sqliCheck } from "../middleware/advanced/sqli/sqli-check";
+import { RegexSqlInjectionDetector } from "../middleware/advanced/sqli/detectors/regex-sqli-detector";
 import { BasicSqlInjectionDetector } from "../middleware/advanced/sqli/detectors/basic-sqli-detector";
+import { sqliCheck } from "../middleware/advanced/sqli/sqli-check";
 
 import { HeuristicXssProvider } from "../middleware/advanced/xxs/providers/heuristic-xss-provider";
 import { XssDetector } from "../middleware/advanced/xxs/xss-detector";
@@ -26,65 +27,106 @@ import { GeoIpProvider } from "../middleware/advanced/geoip/geoip-provider";
 import { botCheck } from "../middleware/advanced/bot/bot-check";
 import { MockBotDetector } from "../middleware/advanced/bot/detectors/mock-bot-detector";
 
+// ---------------------------------------------------------
+// OPTIONS DU WAF
+// ---------------------------------------------------------
+
 export interface WafOptions {
   sqli?: boolean;
+
   xss?: boolean;
+  xssDetector?: XssDetector;
+
   path?: boolean;
   lfi?: boolean;
   rfi?: boolean;
+
   userAgent?: boolean;
+
   bot?: boolean;
 
   geoip?: boolean;
-  blockedCountries?: string[];
   geoIpProvider?: GeoIpProvider;
-
-  // ➜ AJOUT
-  xssDetector?: XssDetector;
+  blockedCountries?: string[];
 }
 
-const defaultWafOptions = {
+export const defaultWafOptions: Required<
+  Omit<WafOptions, "xssDetector" | "geoIpProvider" | "blockedCountries">
+> & {
+  xssDetector: XssDetector;
+  geoIpProvider: GeoIpProvider;
+  blockedCountries: string[];
+} = {
   sqli: true,
+
   xss: true,
+  xssDetector: new AdvancedXssDetector(
+    new MlXssProvider(50, (input) => (input.includes("<script>") ? 90 : 10)),
+  ),
+
   path: true,
   lfi: true,
   rfi: true,
+
   userAgent: true,
-  bot: true, // BOT activé par défaut
+
+  bot: false,
+
   geoip: false,
+  geoIpProvider: new MockGeoIpProvider(),
   blockedCountries: [],
 };
 
-const defaultXssProvider = new MlXssProvider(50, (input) => {
-  return input.includes("<script>") ? 90 : 10;
-});
-
-const defaultXssDetector = new AdvancedXssDetector(defaultXssProvider);
+// ---------------------------------------------------------
+// PIPELINE DU WAF
+// ---------------------------------------------------------
 
 export function waf(options: WafOptions = {}) {
   const enabled = { ...defaultWafOptions, ...options };
 
   const chain = [];
 
-  if (enabled.sqli) chain.push(sqliCheck(new BasicSqlInjectionDetector()));
+  // SQL Injection
+  if (enabled.sqli) {
+    chain.push(sqliCheck(new BasicSqlInjectionDetector()));
+  }
 
-  // XSS avancé
-  const detector = options.xssDetector ?? defaultXssDetector;
-  if (enabled.xss) chain.push(xssCheck(detector));
+  // XSS
+  const xssDetector = options.xssDetector ?? enabled.xssDetector;
+  if (enabled.xss) {
+    chain.push(xssCheck(xssDetector));
+  }
 
-  if (enabled.path) chain.push(pathCheck(new BasicPathTraversalDetector()));
-  if (enabled.lfi) chain.push(lfiCheck(new BasicLfiDetector()));
-  if (enabled.rfi) chain.push(rfiCheck(new BasicRfiDetector()));
-  if (enabled.userAgent)
+  // Path Traversal
+  if (enabled.path) {
+    chain.push(pathCheck(new BasicPathTraversalDetector()));
+  }
+
+  // LFI
+  if (enabled.lfi) {
+    chain.push(lfiCheck(new BasicLfiDetector()));
+  }
+
+  // RFI
+  if (enabled.rfi) {
+    chain.push(rfiCheck(new BasicRfiDetector()));
+  }
+
+  // User-Agent filtering
+  if (enabled.userAgent) {
     chain.push(userAgentCheck(new BasicUserAgentDetector()));
+  }
 
+  // Bot detection
   if (enabled.bot) {
     chain.push(botCheck(new MockBotDetector(false)));
   }
 
+  // GeoIP filtering
   if (enabled.geoip) {
-    const provider = options.geoIpProvider ?? new MockGeoIpProvider();
-    chain.push(geoIpCheck(provider, enabled.blockedCountries));
+    const provider = options.geoIpProvider ?? enabled.geoIpProvider;
+    const blocked = options.blockedCountries ?? enabled.blockedCountries;
+    chain.push(geoIpCheck(provider, blocked));
   }
 
   return chain;

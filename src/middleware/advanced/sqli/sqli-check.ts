@@ -6,39 +6,49 @@ import {
 import { SqlInjectionDetector } from "./sqli-detector";
 
 export function sqliCheck(detector: SqlInjectionDetector) {
-  return (
+  return function sqliCheckMiddleware(
     req: MiddlewareRequest,
     res: MiddlewareResponse,
     next: MiddlewareNext,
-  ) => {
-    const values: string[] = [];
+  ) {
+    const inputs: string[] = [];
+
+    // Query params
+    if (req.query) {
+      for (const value of Object.values(req.query)) {
+        if (typeof value === "string") inputs.push(value);
+      }
+    }
 
     // Body
     if (req.body) {
-      values.push(...Object.values(req.body).map(String));
-    }
-
-    // Query
-    if (req.query) {
-      values.push(...Object.values(req.query).map(String));
+      for (const value of Object.values(req.body)) {
+        if (typeof value === "string") inputs.push(value);
+      }
     }
 
     // Params
     if (req.params) {
-      values.push(...Object.values(req.params).map(String));
+      for (const value of Object.values(req.params)) {
+        if (typeof value === "string") inputs.push(value);
+      }
     }
 
-    // Headers
+    // Headers sensibles
+    const sensitiveHeaders = ["user-agent", "referer", "x-forwarded-for"];
     if (req.headers) {
-      values.push(...Object.values(req.headers).map(String));
+      for (const header of sensitiveHeaders) {
+        const value = req.headers[header];
+        if (typeof value === "string") inputs.push(value);
+      }
     }
-    console.log("SQLI VALUES =", values);
 
     // Détection
-    for (const value of values) {
-      if (detector.detect(value)) {
+    for (const input of inputs) {
+      if (detector.detect(input)) {
         return res.status(403).json({
           error: "SQL Injection detected",
+          input,
         });
       }
     }
